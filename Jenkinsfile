@@ -34,7 +34,7 @@ pipeline {
 
         stage('Health Check') {
             steps {
-                bat 'curl.exe --fail http://localhost:8080/actuator/health'
+                bat 'timeout /t 15 /nobreak >nul && curl.exe --fail http://localhost:8080/actuator/health'
             }
         }
 
