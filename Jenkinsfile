@@ -16,9 +16,17 @@ pipeline {
             }
         }
 
+        stage('Docker Build') {
+            steps {
+                dir('java-app') {
+                    bat 'docker build -t cicd-demo:latest .'
+                }
+            }
+        }
+
         stage('Test') {
             steps {
-                echo 'Java application build and test completed'
+                echo 'Java application build completed'
             }
         }
     }
