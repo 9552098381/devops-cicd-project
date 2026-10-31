@@ -3,11 +3,6 @@ pipeline {
 
     stages {
         stage('Checkout') {
-            steps {pipeline {
-    agent any
-
-    stages {
-        stage('Checkout') {
             steps {
                 echo 'Source code checked out successfully'
             }
@@ -24,23 +19,6 @@ pipeline {
         stage('Test') {
             steps {
                 echo 'Java application build and test completed'
-            }
-        }
-    }
-}
-                echo 'Checking out source code...'
-            }
-        }
-
-        stage('Build') {
-            steps {
-                echo 'Building Java application...'
-            }
-        }
-
-        stage('Test') {
-            steps {
-                echo 'Testing Java application...'
             }
         }
     }
