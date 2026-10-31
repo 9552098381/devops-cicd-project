@@ -1,3 +1,4 @@
+
 pipeline {
     agent any
 
@@ -34,7 +35,7 @@ pipeline {
 
         stage('Health Check') {
             steps {
-               bat 'powershell -NoProfile -Command "Start-Sleep -Seconds 15; curl.exe --fail http://localhost:8080/actuator/health"'
+                bat 'powershell -NoProfile -Command "Start-Sleep -Seconds 15; curl.exe --fail http://localhost:8080/actuator/health"'
             }
         }
 
@@ -42,6 +43,12 @@ pipeline {
             steps {
                 echo 'Java application build completed'
             }
+        }
+    }
+
+    post {
+        always {
+            junit 'java-app/target/surefire-reports/*.xml'
         }
     }
 }
