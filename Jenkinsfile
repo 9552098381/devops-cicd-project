@@ -44,8 +44,20 @@ pipeline {
             }
         }
 
+<<<<<<< HEAD
         // Step 6: Manual Approval
         stage('Manual Approval') {
+=======
+stage('Manual Approval') {
+    steps {
+        timeout(time: 15, unit: 'MINUTES') {
+            input message: 'Approve Production Deployment?',
+                  ok: 'Proceed'
+        }
+    }
+}        
+stage('Test') {
+>>>>>>> 2afb203 (Increase manual approval timeout to 15 minutes)
             steps {
                 timeout(time: 15, unit: 'MINUTES') {
                     input message: 'Approve Production Deployment?',
@@ -77,3 +89,4 @@ pipeline {
         }
     }
 }
+
