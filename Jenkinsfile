@@ -18,20 +18,20 @@ pipeline {
             }
         }
 
-        stage('Docker Build') {
-            steps {
-                dir('java-app') {
-                    bat 'docker build -t cicd-demo:latest .'
-                }
-            }
+       stage('Docker Build') {
+    steps {
+        dir('java-app') {
+            bat 'docker build -t cicd-demo:v%BUILD_NUMBER% .'
         }
+    }
+}
 
-        stage('Docker Deploy') {
-            steps {
-                bat 'docker rm -f cicd-demo-container'
-                bat 'docker run -d --name cicd-demo-container -p 8080:8080 cicd-demo:latest'
-            }
-        }
+       stage('Docker Deploy') {
+    steps {
+        bat 'docker rm -f cicd-demo-container'
+        bat 'docker run -d --name cicd-demo-container -p 8080:8080 cicd-demo:v%BUILD_NUMBER%'
+    }
+}
 
         stage('Health Check') {
             steps {
