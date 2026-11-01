@@ -39,7 +39,15 @@ pipeline {
             }
         }
 
-        stage('Test') {
+stage('Manual Approval') {
+    steps {
+        timeout(time: 5, unit: 'MINUTES') {
+            input message: 'Approve Production Deployment?',
+                  ok: 'Proceed'
+        }
+    }
+}        
+stage('Test') {
             steps {
                 echo 'Java application build completed'
             }
