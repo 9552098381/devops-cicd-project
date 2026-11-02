@@ -29,7 +29,7 @@ pipeline {
 
         stage('Docker Build') {
             steps {
-                dir('java-app') {
+                 dir('source/java-app') {
                     sh 'docker build -t cicd-demo:v${BUILD_NUMBER} .'
                 }
             }
