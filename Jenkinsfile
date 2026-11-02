@@ -11,13 +11,13 @@ pipeline {
     stages {
 
         stage('Checkout') {
-            steps {
-                sh '''
-                    git clone --branch feature/java-app \
-                    https://github.com/9552098381/devops-cicd-project.git .
-                '''
-            }
-        }
+    steps {
+        sh '''
+            git clone --branch feature/java-app \
+            https://github.com/9552098381/devops-cicd-project.git source
+        '''
+    }
+}
 
         stage('Maven Build') {
             steps {
