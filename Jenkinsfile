@@ -2,6 +2,9 @@ pipeline {
     agent {
         label 'ubuntu-ansible'
     }
+    options {
+    skipDefaultCheckout(true)
+}
 
     stages {
         stage('Checkout') {
