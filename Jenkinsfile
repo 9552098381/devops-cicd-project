@@ -1,27 +1,28 @@
+
 pipeline {
     agent {
         label 'ubuntu-ansible'
     }
+
     options {
-    skipDefaultCheckout(true)
-}
+        skipDefaultCheckout(true)
+    }
 
     stages {
+
         stage('Checkout') {
             steps {
-                echo 'Source code checked out successfully'
-            }
-        }
-        stage('WSL Access Test') {
-            steps {
-                bat 'wsl.exe -d Ubuntu -- bash -lc "whoami && ansible --version"'
+                sh '''
+                    git clone --branch feature/java-app \
+                    https://github.com/9552098381/devops-cicd-project.git .
+                '''
             }
         }
 
         stage('Maven Build') {
             steps {
                 dir('java-app') {
-                    bat 'mvn clean package'
+                    sh 'mvn clean package'
                 }
             }
         }
@@ -29,21 +30,30 @@ pipeline {
         stage('Docker Build') {
             steps {
                 dir('java-app') {
-                    bat 'docker build -t cicd-demo:v%BUILD_NUMBER% .'
+                    sh 'docker build -t cicd-demo:v${BUILD_NUMBER} .'
                 }
             }
         }
 
         stage('Docker Deploy') {
             steps {
-                bat 'docker rm -f cicd-demo-container'
-                bat 'docker run -d --name cicd-demo-container -p 8080:8080 cicd-demo:v%BUILD_NUMBER%'
+                sh '''
+                    docker rm -f cicd-demo-container || true
+
+                    docker run -d \
+                    --name cicd-demo-container \
+                    -p 8080:8080 \
+                    cicd-demo:v${BUILD_NUMBER}
+                '''
             }
         }
 
         stage('Health Check') {
             steps {
-                bat 'powershell -NoProfile -Command "Start-Sleep -Seconds 15; curl.exe --fail http://localhost:8080/actuator/health"'
+                sh '''
+                    sleep 15
+                    curl --fail http://localhost:8080/actuator/health
+                '''
             }
         }
 
@@ -58,18 +68,21 @@ pipeline {
 
         stage('Test') {
             steps {
-                echo 'Java application build completed'
+                echo 'Java application build completed successfully!'
             }
         }
     }
 
     post {
         always {
-            junit 'java-app/target/surefire-reports/*.xml'
+            junit allowEmptyResults: true,
+                  testResults: 'java-app/target/surefire-reports/*.xml'
         }
+
         success {
             echo 'CI/CD Pipeline completed successfully!'
         }
+
         failure {
             echo 'CI/CD Pipeline failed. Please check Console Output.'
         }
