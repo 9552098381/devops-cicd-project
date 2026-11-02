@@ -7,6 +7,11 @@ pipeline {
                 echo 'Source code checked out successfully'
             }
         }
+        stage('WSL Access Test') {
+            steps {
+                bat 'wsl.exe -d Ubuntu -- bash -lc "whoami && ansible --version"'
+            }
+        }
 
         stage('Maven Build') {
             steps {
