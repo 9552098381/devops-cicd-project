@@ -4,6 +4,7 @@
     name: "{{ docker_container_name }}"
     image: "{{ docker_image }}"
     state: started
+    recreate: true
     published_ports:
       - "{{ docker_host_port }}:{{ docker_container_port }}"
     restart_policy: unless-stopped
