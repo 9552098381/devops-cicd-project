@@ -13,6 +13,7 @@ pipeline {
         stage('Checkout') {
     steps {
         sh '''
+             rm -rf source
             git clone --branch feature/java-app \
             https://github.com/9552098381/devops-cicd-project.git source
         '''
