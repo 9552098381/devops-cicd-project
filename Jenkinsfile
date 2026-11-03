@@ -23,7 +23,12 @@ pipeline {
         stage('Maven Build') {
             steps {
                dir('source/java-app') {
-                    sh 'mvn clean package'
+                    sh '''
+    java -version
+    javac -version
+    mvn -version
+    mvn clean package
+'''
                 }
             }
         }
