@@ -72,7 +72,33 @@ pipeline {
         '''
     }
 }
+        stage('Ansible Staging Deployment') {
+            steps {
+                dir('source') {
+                    withEnv([
+                        "PATH+ANSIBLE=/home/ashwini_d/ansible-venv/bin",
+                        "ANSIBLE_CONFIG=ansible/ansible.cfg"
+                    ]) {
+                        sh '''
+                            ansible-playbook \
+                            -i ansible/inventories/staging/hosts.ini \
+                            ansible/playbooks/deploy-docker.yml \
+                            -e "docker_image=cicd-demo:v${BUILD_NUMBER}" \
+                            -e "deploy_group=staging"
+                        '''
+                    }
+                }
+            }
+        }
 
+        stage('Manual Approval') {
+            steps {
+                timeout(time: 15, unit: 'MINUTES') {
+                    input message: 'Approve Production Deployment?',
+                          ok: 'Proceed'
+                }
+            }
+        }
         stage('Manual Approval') {
             steps {
                 timeout(time: 15, unit: 'MINUTES') {
