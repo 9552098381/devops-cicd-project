@@ -99,15 +99,6 @@ pipeline {
                 }
             }
         }
-        stage('Manual Approval') {
-            steps {
-                timeout(time: 15, unit: 'MINUTES') {
-                    input message: 'Approve Production Deployment?',
-                          ok: 'Proceed'
-                }
-            }
-        }
-
 
         stage('Ansible Production Deployment') {
             steps {
