@@ -54,14 +54,24 @@ pipeline {
             }
         }
 
-        stage('Health Check') {
-            steps {
-                sh '''
-                    sleep 15
-                    curl --fail http://localhost:8080/actuator/health
-                '''
-            }
-        }
+            stage('Health Check') {
+    steps {
+        sh '''
+            for i in $(seq 1 12); do
+                if curl --fail --silent http://localhost:8080/actuator/health; then
+                    echo "Application is healthy!"
+                    exit 0
+                fi
+
+                echo "Application is starting... Attempt $i"
+                sleep 5
+            done
+
+            echo "Health check failed!"
+            exit 1
+        '''
+    }
+}
 
         stage('Manual Approval') {
             steps {
