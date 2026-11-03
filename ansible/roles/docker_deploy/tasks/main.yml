@@ -1,0 +1,24 @@
+---
+- name: Run Java application container
+  community.docker.docker_container:
+    name: "{{ docker_container_name }}"
+    image: "{{ docker_image }}"
+    state: started
+    published_ports:
+      - "{{ docker_host_port }}:{{ docker_container_port }}"
+    restart_policy: unless-stopped
+
+- name: Check Java application health
+  ansible.builtin.uri:
+    url: "http://localhost:{{ docker_host_port }}/actuator/health"
+    method: GET
+    status_code: 200
+    return_content: true
+  register: health_check
+  retries: 10
+  delay: 5
+  until: health_check.status == 200 and health_check.json.status == "UP"
+
+- name: Display application health status
+  ansible.builtin.debug:
+    msg: "Java application is healthy and running successfully!"

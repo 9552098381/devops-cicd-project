@@ -1,0 +1,5 @@
+---
+docker_image: cicd-demo:v17
+docker_container_name: cicd-demo-prod
+docker_host_port: 8087
+docker_container_port: 8080

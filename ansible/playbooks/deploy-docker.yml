@@ -1,0 +1,9 @@
+
+---
+- name: Deploy Java Application using Ansible Role
+  hosts: prod
+  connection: local
+  become: false
+
+  roles:
+    - docker_deploy
