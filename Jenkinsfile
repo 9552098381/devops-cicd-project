@@ -72,7 +72,28 @@ pipeline {
             }
         }
 
-        stage('Test') {
+
+        stage('Ansible Production Deployment') {
+            steps {
+                dir('source') {
+                    withEnv([
+                        "PATH+ANSIBLE=/home/ashwini_d/ansible-venv/bin",
+                        "ANSIBLE_CONFIG=ansible/ansible.cfg"
+                    ]) {
+                        sh '''
+                            ansible --version
+
+                            ansible-playbook \
+                            -i ansible/inventories/prod/hosts.ini \
+                            ansible/playbooks/deploy-docker.yml \
+                            -e "docker_image=cicd-demo:v${BUILD_NUMBER}"
+                        '''
+                    }
+                }
+            }
+        }
+stage('Test') {
+
             steps {
                 echo 'Java application build completed successfully!'
             }
