@@ -1,7 +1,7 @@
 
 ---
 - name: Deploy Java Application using Ansible Role
-  hosts: prod
+  hosts: "{{ deploy_group | default('prod') }}"
   connection: local
   become: false
 
