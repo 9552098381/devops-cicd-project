@@ -100,25 +100,69 @@ pipeline {
             }
         }
 
-        stage('Ansible Production Deployment') {
-            steps {
+
+stage('Ansible Production Deployment') {
+    steps {
+        script {
+            def previousImage = sh(
+                script: "docker inspect --format='{{.Config.Image}}' cicd-demo-prod",
+                returnStdout: true
+            ).trim()
+
+            echo "Previous Production Image: ${previousImage}"
+
+            try {
                 dir('source') {
                     withEnv([
                         "PATH+ANSIBLE=/home/ashwini_d/ansible-venv/bin",
                         "ANSIBLE_CONFIG=ansible/ansible.cfg"
                     ]) {
-                        sh '''
-                            ansible --version
-
+                        sh """
                             ansible-playbook \
                             -i ansible/inventories/prod/hosts.ini \
                             ansible/playbooks/deploy-docker.yml \
                             -e "docker_image=cicd-demo:v${BUILD_NUMBER}"
-                        '''
+                        """
                     }
                 }
+
+                sh '''
+                    for i in $(seq 1 12); do
+                        if curl --fail --silent http://localhost:8087/actuator/health; then
+                            echo "Production deployment successful!"
+                            exit 0
+                        fi
+                        echo "Waiting for production application..."
+                        sleep 5
+                    done
+                    exit 1
+                '''
+
+            } catch (err) {
+                echo "Production deployment failed. Starting automatic rollback!"
+
+                dir('source') {
+                    withEnv([
+                        "PATH+ANSIBLE=/home/ashwini_d/ansible-venv/bin",
+                        "ANSIBLE_CONFIG=ansible/ansible.cfg"
+                    ]) {
+                        sh """
+                            ansible-playbook \
+                            -i ansible/inventories/prod/hosts.ini \
+                            ansible/playbooks/deploy-docker.yml \
+                            -e "docker_image=${previousImage}"
+                        """
+                    }
+                }
+
+                sh 'curl --fail http://localhost:8087/actuator/health'
+
+                error("Deployment failed. Previous version restored: ${previousImage}")
             }
         }
+    }
+}
+
 stage('Test') {
 
             steps {
