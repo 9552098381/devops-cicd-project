@@ -92,6 +92,17 @@ If the new deployment or health check fails, Jenkins attempts to restore the pre
 
 After rollback, the application health is checked again.
 
+### Rollback Testing
+
+- Previous image: `cicd-demo:v47`
+- New image: `cicd-demo:v48`
+- Deployment failure: Simulated
+- Rollback result: Successful
+- Final restored image: `cicd-demo:v47`
+- Health check: Passed
+
+**Note:** Automatic rollback was tested successfully in a separate Jenkins test pipeline using an isolated test container. Production rollback failure testing is still pending.
+
 ## Project Testing Status
 
 ## Project Testing Status
