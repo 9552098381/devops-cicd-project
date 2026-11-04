@@ -103,8 +103,9 @@ After rollback, the application health is checked again.
 | Production Deployment | Verified |
 | Health Check | Verified |
 | Manual Staging Rollback | Tested |
-| Automated Production Rollback | Failure test pending |
-| GitHub Webhook | Verification pending |
+| Automated Production Rollback | Logic implemented; failure test pending |
+| Manual Ansible Rollback (v48 to v47) | Passed |
+| GitHub Webhook | HTTP 200; Jenkins pipeline successful |
 
 ## Key Features
 
