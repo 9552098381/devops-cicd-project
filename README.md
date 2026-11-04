@@ -94,6 +94,8 @@ After rollback, the application health is checked again.
 
 ## Project Testing Status
 
+## Project Testing Status
+
 | Feature | Status |
 |---|---|
 | Jenkins Pipeline | Successful |
@@ -103,8 +105,11 @@ After rollback, the application health is checked again.
 | Production Deployment | Verified |
 | Health Check | Verified |
 | Manual Staging Rollback | Tested |
-| Automated Production Rollback | Logic implemented; failure test pending |
+| Automated Production Rollback | Logic implemented; isolated Jenkins rollback test passed |
 | Manual Ansible Rollback (v48 to v47) | Passed |
+| Jenkins Automatic Rollback Test (v48 to v47) | Passed |
+| Rollback Image Verification | Passed |
+| Rollback Container Health Check | Passed |
 | GitHub Webhook | HTTP 200; Jenkins pipeline successful |
 
 ## Key Features
